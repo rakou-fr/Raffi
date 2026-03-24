@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { VideoGenerator } from './VideoGenerator.jsx'
 import { Spinner }   from './Spinner.jsx'
 import { downloadCarousel } from '../slides/generateCarousel.js'
 
@@ -133,7 +132,7 @@ export function ArticleCard({ item, onGenerate, generating }) {
                 className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold
                   bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 transition-all active:scale-95"
               >
-                ⬇ Slides
+                ⬇ Télécharger
               </button>
               <button
                 onClick={() => { setSlideIdx(0); onGenerate(item) }}
@@ -146,14 +145,6 @@ export function ArticleCard({ item, onGenerate, generating }) {
           )}
         </div>
       </div>
-
-      {/* ── Vidéo */}
-      {isDone && (
-        <div className="px-3 pb-3">
-          <VideoGenerator slideUrls={slides} itemId={item.id} />
-        </div>
-      )}
-
     </div>
   )
 }
