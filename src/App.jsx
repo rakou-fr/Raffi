@@ -3,6 +3,7 @@ import { StatusBar }       from './components/StatusBar.jsx'
 import { Spinner }         from './components/Spinner.jsx'
 import { ArticleCard }     from './components/ArticleCard.jsx'
 import { generateCarousel, downloadCarousel } from './slides/generateCarousel.js'
+import { HaulCarousel } from './components/HaulCarousel.jsx'
 
 export default function App() {
   const [engineState,   setEngineState]   = useState('idle')
@@ -76,7 +77,10 @@ export default function App() {
       const qcUrls = d.urls || []
 
       // picUrl du détail est toujours sur cdn.findqc.com → charge directement
-      const itemWithPic = { ...item, pic: d.picUrl || item.pic }
+      const itemWithPic = { ...item, pic: d.picUrl || item.pic, _qcUrls: qcUrls }
+
+      // Stocke les QC URLs sur l'article dans la liste
+      setArticles(prev => prev.map(a => a.id === item.id ? { ...a, _qcUrls: qcUrls, pic: d.picUrl || a.pic } : a))
 
       // Génère les 4 slides canvas
       const slides = await generateCarousel(itemWithPic, qcUrls, { agentPrice, affiliateCode })
@@ -278,8 +282,19 @@ export default function App() {
         )}
 
         {isReady && articles.length > 0 && (
-          <div>
-            <p className="text-xs text-white/25 mb-4">
+          <div className="flex flex-col gap-6">
+
+            {/* ── Carrousel Haul global */}
+            <HaulCarousel articles={articles} affiliateCode={affiliateCode} />
+
+            {/* ── Séparateur */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/5" />
+              <span className="text-[10px] uppercase tracking-[2px] text-white/20">Carrousels individuels</span>
+              <div className="flex-1 h-px bg-white/5" />
+            </div>
+
+            <p className="text-xs text-white/25">
               {articles.length} articles chargés
               {doneCount > 0 && <span className="text-emerald-400 ml-2">· {doneCount} générés</span>}
             </p>
