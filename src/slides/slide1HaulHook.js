@@ -1,96 +1,95 @@
-// slide1HaulHook.js
-// Slide 1 du carrousel HAUL
-// Image de fond depuis dossier local + phrase accrocheuse random
-// Format : 1080×1920
-
 const SW = 1080, SH = 1920
 
 const PHRASES = [
-  "Meilleur haul\npour l'été 🔥",
-  "Haul complet",
-  "Haul du mois📦",
-  "Mon haul\nde la semaine 🛍️"
+  "MEILLEUR HAUL\nPOUR L'ÉTÉ",
+  "LE HAUL QUI CHANGE\nTON STYLE",
+  "PIÈCES\nUNDERRATED",
+  "HAUL À PRIX\nCASSÉS",
+  "CE QUE J'AI\nCOMMANDÉ",
+  "TOP FINDS\nDU MOMENT",
+  "HAUL\nDE LA SEMAINE",
+  "QUALITÉ\nINCROYABLE",
+  "LE HAUL\nATTENDU",
+  "PIÈCES\nRARES",
 ]
 
-export async function renderSlide1Haul(backgroundFile, loadImg) {
-  const c   = document.createElement('canvas')
-  c.width   = SW; c.height = SH
+export async function renderSlide1Haul(bgDataUrl, loadImg) {
+  const c = document.createElement('canvas')
+  c.width = SW
+  c.height = SH
   const ctx = c.getContext('2d')
 
-  // ── Fond noir de base
+  // Background
   ctx.fillStyle = '#0a0a0a'
   ctx.fillRect(0, 0, SW, SH)
 
-  // ── Image de fond depuis fichier local
-  if (backgroundFile) {
+  // Image
+  if (bgDataUrl) {
     try {
-      const blobUrl = URL.createObjectURL(backgroundFile)
-      const img     = await loadImg(blobUrl)
-      URL.revokeObjectURL(blobUrl)
-
-      // Cover
-      const r  = Math.max(SW / img.width, SH / img.height)
-      const dw = img.width  * r
+      const img = await loadImg(bgDataUrl)
+      const r = Math.max(SW / img.width, SH / img.height)
+      const dw = img.width * r
       const dh = img.height * r
-      ctx.globalAlpha = 0.65
+
+      ctx.globalAlpha = 0.45
       ctx.drawImage(img, (SW - dw) / 2, (SH - dh) / 2, dw, dh)
       ctx.globalAlpha = 1
     } catch {}
   }
 
-  // ── Gradient global pour lisibilité
+  // Gradient
   const g = ctx.createLinearGradient(0, 0, 0, SH)
-  g.addColorStop(0,    'rgba(0,0,0,.7)')
-  g.addColorStop(0.35, 'rgba(0,0,0,.15)')
-  g.addColorStop(0.65, 'rgba(0,0,0,.15)')
-  g.addColorStop(1,    'rgba(0,0,0,.92)')
+  g.addColorStop(0, 'rgba(0,0,0,0.85)')
+  g.addColorStop(0.5, 'rgba(0,0,0,0.3)')
+  g.addColorStop(1, 'rgba(0,0,0,0.9)')
   ctx.fillStyle = g
   ctx.fillRect(0, 0, SW, SH)
 
-  // ── Accent rouge haut + bas
-  ctx.fillStyle = '#ff0000'
-  ctx.fillRect(0, 0, SW, 12)
-  ctx.fillRect(0, SH - 12, SW, 12)
+  const cx = SW / 2
 
-  // ── Logo MYCNBOX haut gauche
+  // Brand
   ctx.fillStyle = '#ff0000'
-  ctx.beginPath(); ctx.roundRect(54, 48, 240, 70, 10); ctx.fill()
-  ctx.font      = 'bold 38px Arial Black, Arial'
+  ctx.font = 'bold 58px Arial Black, Arial'
+  ctx.textAlign = 'center'
+  ctx.fillText('MYCNBOX', cx, 140)
+
+  // Phrase
+  const phrase = PHRASES[Math.floor(Math.random() * PHRASES.length)]
+  const lines = phrase.split('\n')
+
+  const maxWidth = SW - 160
+
+  let fontSize = 120
+  let fits = false
+
+  // 🔥 Auto-scale loop
+  while (!fits && fontSize > 40) {
+    ctx.font = `bold ${fontSize}px Arial Black, Arial`
+    fits = lines.every(line => ctx.measureText(line).width <= maxWidth)
+
+    if (!fits) fontSize -= 4
+  }
+
   ctx.fillStyle = '#ffffff'
   ctx.textAlign = 'center'
-  ctx.fillText('MYCNBOX', 174, 96)
 
-  // ── Phrase random — grande, centrée verticalement
-  const phrase = PHRASES[Math.floor(Math.random() * PHRASES.length)]
-  const lines  = phrase.split('\n')
-
-  ctx.textAlign   = 'left'
-  ctx.font        = 'bold 118px Arial Black, Arial'
-  ctx.fillStyle   = '#ffffff'
-  ctx.shadowColor = 'rgba(0,0,0,.9)'
-  ctx.shadowBlur  = 24
-
-  // Centre vertical
-  const lineH  = 134
-  const totalH = lines.length * lineH
-  let   textY  = (SH - totalH) / 2 + 100
+  const lineHeight = fontSize * 1.1
+  const totalH = lines.length * lineHeight
+  let y = (SH - totalH) / 2
 
   lines.forEach(line => {
-    ctx.fillText(line, 54, textY)
-    textY += lineH
+    ctx.fillText(line, cx, y)
+    y += lineHeight
   })
-  ctx.shadowBlur = 0
 
-  // Ligne rouge décorative sous le texte
+  // Accent rouge
   ctx.fillStyle = '#ff0000'
-  ctx.fillRect(54, textY + 10, 420, 8)
+  ctx.fillRect(cx - 120, y + 20, 240, 6)
 
-  // ── CTA bas
-  ctx.font      = 'bold 44px Arial'
-  ctx.fillStyle = 'rgba(255,255,255,.6)'
-  ctx.textAlign = 'center'
-  ctx.fillText('SWIPE POUR VOIR LES ARTICLES →', SW / 2, SH - 80)
+  // CTA
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'
+  ctx.font = '40px Arial'
+  ctx.fillText('SWIPE →', cx, SH - 100)
 
-  ctx.textAlign = 'left'
   return c
 }

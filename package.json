@@ -1,25 +1,22 @@
 {
-  "name": "qcfinds-carousel",
+  "name": "mycnbox-carousel",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"node server.js\" \"vite\""
+    "dev": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
-    "puppeteer": "^22.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "concurrently": "^9.0.1",
-    "@ffmpeg/ffmpeg": "0.12.10",
-    "@ffmpeg/util": "0.12.2"
+    "express":      "^4.19.2",
+    "puppeteer":    "^22.0.0",
+    "react":        "^18.3.1",
+    "react-dom":    "^18.3.1",
+    "vite":         "^5.4.10"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.14",
-    "vite": "^5.4.10"
+    "autoprefixer":         "^10.4.20",
+    "postcss":              "^8.4.47",
+    "tailwindcss":          "^3.4.14"
   }
 }

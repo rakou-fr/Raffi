@@ -1,5 +1,6 @@
-const SW = 1080, SH = 1920
-const GAP = 20
+const SW = 1080
+const SH = 1920
+const GAP = 10
 
 async function drawCell(ctx, x, y, w, h, imgUrl, num, loadImg) {
   try {
@@ -35,7 +36,7 @@ async function drawCell(ctx, x, y, w, h, imgUrl, num, loadImg) {
   ctx.fillText(num, x + 36, y + 42)
 }
 
-export async function renderSlide2Haul(articles, loadImg) {
+export async function renderSlide3Haul(articles, loadImg) {
   const c = document.createElement('canvas')
   c.width = SW
   c.height = SH
@@ -46,15 +47,15 @@ export async function renderSlide2Haul(articles, loadImg) {
 
   const cx = SW / 2
 
-  // Header minimal
+  // Header variant
   ctx.fillStyle = '#ffffff'
   ctx.font = 'bold 48px Arial Black'
   ctx.textAlign = 'center'
-  ctx.fillText('QUALITY CHECK', cx, 120)
+  ctx.fillText('MORE DETAILS', cx, 120)
 
-  ctx.fillStyle = 'rgba(255,255,255,0.35)'
+  ctx.fillStyle = '#ff0000'
   ctx.font = '32px Arial'
-  ctx.fillText('Photos réelles', cx, 165)
+  ctx.fillText('ZOOM QC', cx, 165)
 
   // Grid
   const TOP = 220
@@ -69,16 +70,18 @@ export async function renderSlide2Haul(articles, loadImg) {
     const y = TOP + GAP + row * (CELL_H + GAP)
 
     const art = articles[i]
-    const qcUrl = art?.qcUrls?.[0] || art?.picUrl || ''
+    const qcUrls = art?.qcUrls || []
+
+    const qcUrl = qcUrls[1] || qcUrls[2] || qcUrls[0] || art?.picUrl || ''
 
     await drawCell(ctx, x, y, CELL_W, CELL_H, qcUrl, i + 1, loadImg)
   }
 
-  // CTA discret
+  // CTA final vers conversion
   ctx.fillStyle = 'rgba(255,255,255,0.35)'
   ctx.font = '36px Arial'
   ctx.textAlign = 'center'
-  ctx.fillText('SWIPE →', cx, SH - 80)
+  ctx.fillText('SPREADSHEET EN BIO →', cx, SH - 80)
 
   return c
 }
